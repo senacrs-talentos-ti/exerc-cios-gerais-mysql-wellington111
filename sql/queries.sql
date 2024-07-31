@@ -1,38 +1,45 @@
-create database exercicio ;
+CREATE DATABASE exercicio;
 
-use exercicio ;
+USE exercicio;
+
 CREATE TABLE CLIENTS (
-    id INTEGER PRIMARY KEY auto_increment,
-    name varchar(255) NOT NULL,
-    email varchar(100) NOT NULL
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL
 );
-use exercicio ;
+
 CREATE TABLE PRODUCTS (
-    id INTEGER PRIMARY KEY auto_increment,
-    name varchar(255) NOT NULL,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL
 );
+
 CREATE TABLE ORDERS (
-    id INTEGER PRIMARY KEY auto_increment,
+    id INTEGER PRIMARY KEY AUTO_INCREMENT,
     client_id INTEGER NOT NULL,
     order_date DATE NOT NULL,
-    total DECIMAL NOT NULL,
-    FOREIGN KEY (client_id) REFERENCES CLIENTS(id)
+    total DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES CLIENTS(id) ON DELETE CASCADE
 );
-use exercicio ;
+
 CREATE TABLE ORDER_ITEMS (
     order_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
     quantity INTEGER NOT NULL,
-    price DECIMAL NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES ORDERS(id),
-    FOREIGN KEY (product_id) REFERENCES PRODUCTS(id)
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES ORDERS(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES PRODUCTS(id) ON DELETE CASCADE
 );
+
 INSERT INTO CLIENTS (name, email) VALUES ('Victor', 'Victor9080@Gmail.com');
 INSERT INTO CLIENTS (name, email) VALUES ('Wellitin', 'Wellitin36@Gmail.com');
 
+SELECT * FROM CLIENTS;
+
 INSERT INTO PRODUCTS (name, price) VALUES ('Porsche', 10.0);
 INSERT INTO PRODUCTS (name, price) VALUES ('Uno com escada', 20.0);
+
+SELECT * FROM PRODUCTS;
 
 INSERT INTO ORDERS (client_id, order_date, total) VALUES (1, '2024-07-30', 30.0);
 INSERT INTO ORDERS (client_id, order_date, total) VALUES (2, '2024-07-30', 50.0);
@@ -41,7 +48,6 @@ INSERT INTO ORDER_ITEMS (order_id, product_id, quantity, price) VALUES (1, 1, 2,
 INSERT INTO ORDER_ITEMS (order_id, product_id, quantity, price) VALUES (2, 2, 2, 20.0);
 
 UPDATE PRODUCTS SET price = 15.0 WHERE id = 1;
-
 UPDATE ORDER_ITEMS SET price = 15.0 WHERE product_id = 1;
 
 DELETE FROM ORDER_ITEMS WHERE order_id IN (SELECT id FROM ORDERS WHERE client_id = 1);
@@ -50,6 +56,7 @@ DELETE FROM CLIENTS WHERE id = 1;
 
 ALTER TABLE CLIENTS ADD COLUMN birthdate DATE;
 
+-- Queries
 SELECT ORDERS.id, CLIENTS.name AS client_name, PRODUCTS.name AS product_name
 FROM ORDERS
 JOIN CLIENTS ON ORDERS.client_id = CLIENTS.id
@@ -107,8 +114,7 @@ JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
 JOIN ORDER_ITEMS ON ORDERS.id = ORDER_ITEMS.order_id
 GROUP BY CLIENTS.name;
 
-
-SELECT strftime('%Y-%m', order_date) AS month, COUNT(DISTINCT ORDERS.id) AS total_orders, COUNT(DISTINCT CLIENTS.id) AS total_clients
+SELECT DATE_FORMAT(order_date, '%Y-%m') AS month, COUNT(DISTINCT ORDERS.id) AS total_orders, COUNT(DISTINCT CLIENTS.id) AS total_clients
 FROM ORDERS
 JOIN CLIENTS ON ORDERS.client_id = CLIENTS.id
 GROUP BY month;
@@ -127,12 +133,10 @@ HAVING COUNT(DISTINCT ORDER_ITEMS.product_id) > 2;
 SELECT CLIENTS.name
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
-WHERE ORDERS.order_date >= DATE('now', '-1 month');
+WHERE ORDERS.order_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);
 
 SELECT CLIENTS.name, AVG(ORDERS.total) AS average_order_value
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
 GROUP BY CLIENTS.name
 ORDER BY average_order_value DESC;
-
-
