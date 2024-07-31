@@ -2,14 +2,14 @@
 use exercicio ;
 CREATE TABLE CLIENTS (
     id INTEGER PRIMARY KEY auto_increment,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL
+    name varchar(255) NOT NULL,
+    email varchar(100) NOT NULL
 );
 use exercicio ;
 CREATE TABLE PRODUCTS (
     id INTEGER PRIMARY KEY auto_increment,
-    name TEXT NOT NULL,
-    price DECIMAL NOT NULL
+    name varchar(255) NOT NULL,
+    price DECIMAL(10,2) NOT NULL
 );
 CREATE TABLE ORDERS (
     id INTEGER PRIMARY KEY auto_increment,
