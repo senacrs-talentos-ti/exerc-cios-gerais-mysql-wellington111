@@ -1,3 +1,4 @@
+create database exercicio ;
 
 use exercicio ;
 CREATE TABLE CLIENTS (
