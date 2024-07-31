@@ -31,8 +31,8 @@ CREATE TABLE ORDER_ITEMS (
 INSERT INTO CLIENTS (name, email) VALUES ('Victor', 'Victor9080@Gmail.com');
 INSERT INTO CLIENTS (name, email) VALUES ('Wellitin', 'Wellitin36@Gmail.com');
 
-INSERT INTO PRODUCTS (name, price) VALUES ('Porsche', 1000.0);
-INSERT INTO PRODUCTS (name, price) VALUES ('Uno com escada', 200000.0);
+INSERT INTO PRODUCTS (name, price) VALUES ('Porsche', 10.0);
+INSERT INTO PRODUCTS (name, price) VALUES ('Uno com escada', 20.0);
 
 INSERT INTO ORDERS (client_id, order_date, total) VALUES (1, '2024-07-30', 30.0);
 INSERT INTO ORDERS (client_id, order_date, total) VALUES (2, '2024-07-30', 50.0);
