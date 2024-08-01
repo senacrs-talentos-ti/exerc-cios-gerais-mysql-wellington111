@@ -1,19 +1,19 @@
 CREATE DATABASE exercicio;
 
 USE exercicio;
-
-CREATE TABLE CLIENTS (
+-- 1
+ CREATE TABLE CLIENTS (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(100) NOT NULL
 );
-
+-- 2
 CREATE TABLE PRODUCTS (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(255) NOT NULL,
     price DECIMAL(10,2) NOT NULL
 );
-
+-- 3
 CREATE TABLE ORDERS (
     id INTEGER PRIMARY KEY AUTO_INCREMENT,
     client_id INTEGER NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE ORDERS (
     total DECIMAL(10,2) NOT NULL,
     FOREIGN KEY (client_id) REFERENCES CLIENTS(id) ON DELETE CASCADE
 );
-
+-- 4
 CREATE TABLE ORDER_ITEMS (
     order_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
@@ -30,95 +30,95 @@ CREATE TABLE ORDER_ITEMS (
     FOREIGN KEY (order_id) REFERENCES ORDERS(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES PRODUCTS(id) ON DELETE CASCADE
 );
-
+-- 5
 INSERT INTO CLIENTS (name, email) VALUES ('Victor', 'Victor9080@Gmail.com');
 INSERT INTO CLIENTS (name, email) VALUES ('Wellitin', 'Wellitin36@Gmail.com');
 
 SELECT * FROM CLIENTS;
-
+-- 6
 INSERT INTO PRODUCTS (name, price) VALUES ('Porsche', 10.0);
 INSERT INTO PRODUCTS (name, price) VALUES ('Uno com escada', 20.0);
 
 SELECT * FROM PRODUCTS;
-
+-- 7
 INSERT INTO ORDERS (client_id, order_date, total) VALUES (1, '2024-07-30', 30.0);
 INSERT INTO ORDERS (client_id, order_date, total) VALUES (2, '2024-07-30', 50.0);
-
+-- 8
 INSERT INTO ORDER_ITEMS (order_id, product_id, quantity, price) VALUES (1, 1, 2, 10.0);
 INSERT INTO ORDER_ITEMS (order_id, product_id, quantity, price) VALUES (2, 2, 2, 20.0);
-
-UPDATE PRODUCTS SET price = 15.0 WHERE id = 1;
-UPDATE ORDER_ITEMS SET price = 15.0 WHERE product_id = 1;
-
+-- 9
+UPDATE PRODUCTS SET price = 1500.0 WHERE id = 1;
+UPDATE ORDER_ITEMS SET price = 1500.0 WHERE product_id = 1;
+-- 10
 DELETE FROM ORDER_ITEMS WHERE order_id IN (SELECT id FROM ORDERS WHERE client_id = 1);
 DELETE FROM ORDERS WHERE client_id = 1;
 DELETE FROM CLIENTS WHERE id = 1;
-
+-- 11
 ALTER TABLE CLIENTS ADD COLUMN birthdate DATE;
 
--- Queries
+-- 12
 SELECT ORDERS.id, CLIENTS.name AS client_name, PRODUCTS.name AS product_name
 FROM ORDERS
 JOIN CLIENTS ON ORDERS.client_id = CLIENTS.id
 JOIN ORDER_ITEMS ON ORDERS.id = ORDER_ITEMS.order_id
 JOIN PRODUCTS ON ORDER_ITEMS.product_id = PRODUCTS.id;
-
+-- 13
 SELECT CLIENTS.name AS client_name, ORDERS.id AS order_id
 FROM CLIENTS
 LEFT JOIN ORDERS ON CLIENTS.id = ORDERS.client_id;
-
+-- 14
 SELECT PRODUCTS.name AS product_name, ORDERS.id AS order_id
 FROM PRODUCTS
 RIGHT JOIN ORDER_ITEMS ON PRODUCTS.id = ORDER_ITEMS.product_id
 RIGHT JOIN ORDERS ON ORDER_ITEMS.order_id = ORDERS.id;
-
+-- 15
 SELECT SUM(total) AS total_sales, SUM(quantity) AS total_items_sold
 FROM ORDERS
 JOIN ORDER_ITEMS ON ORDERS.id = ORDER_ITEMS.order_id;
-
+-- 16
 SELECT CLIENTS.name, COUNT(ORDERS.id) AS total_orders
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
 GROUP BY CLIENTS.name
 ORDER BY total_orders DESC;
-
+-- 17
 SELECT PRODUCTS.name, SUM(ORDER_ITEMS.quantity) AS total_quantity_sold
 FROM PRODUCTS
 JOIN ORDER_ITEMS ON PRODUCTS.id = ORDER_ITEMS.product_id
 GROUP BY PRODUCTS.name
 ORDER BY total_quantity_sold DESC;
-
+-- 18
 SELECT CLIENTS.name, SUM(ORDERS.total) AS total_spent
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
 GROUP BY CLIENTS.name
 ORDER BY total_spent DESC;
-
+-- 19
 SELECT PRODUCTS.name, SUM(ORDER_ITEMS.quantity) AS total_quantity_sold, SUM(ORDER_ITEMS.price * ORDER_ITEMS.quantity) AS total_sales
 FROM PRODUCTS
 JOIN ORDER_ITEMS ON PRODUCTS.id = ORDER_ITEMS.product_id
 GROUP BY PRODUCTS.name
 ORDER BY total_quantity_sold DESC
 LIMIT 3;
-
+-- 20
 SELECT CLIENTS.name, SUM(ORDERS.total) AS total_spent
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
 GROUP BY CLIENTS.name
 ORDER BY total_spent DESC
 LIMIT 3;
-
+-- 21
 SELECT CLIENTS.name, AVG(ORDER_ITEMS.quantity) AS average_quantity_per_order
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
 JOIN ORDER_ITEMS ON ORDERS.id = ORDER_ITEMS.order_id
 GROUP BY CLIENTS.name;
-
+-- 22
 SELECT DATE_FORMAT(order_date, '%Y-%m') AS month, COUNT(DISTINCT ORDERS.id) AS total_orders, COUNT(DISTINCT CLIENTS.id) AS total_clients
 FROM ORDERS
 JOIN CLIENTS ON ORDERS.client_id = CLIENTS.id
 GROUP BY month;
-
+-- 23
 SELECT PRODUCTS.name
 FROM PRODUCTS
 LEFT JOIN ORDER_ITEMS ON PRODUCTS.id = ORDER_ITEMS.product_id
@@ -129,12 +129,12 @@ FROM ORDERS
 JOIN ORDER_ITEMS ON ORDERS.id = ORDER_ITEMS.order_id
 GROUP BY ORDERS.id
 HAVING COUNT(DISTINCT ORDER_ITEMS.product_id) > 2;
-
+-- 24
 SELECT CLIENTS.name
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
 WHERE ORDERS.order_date >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH);
-
+-- 25
 SELECT CLIENTS.name, AVG(ORDERS.total) AS average_order_value
 FROM CLIENTS
 JOIN ORDERS ON CLIENTS.id = ORDERS.client_id
